@@ -1,0 +1,33 @@
+{
+  "name": "lkclean",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension that hides low-value LinkedIn posts using Jev, TypeSafe AI's typed classification model",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.270",
+    "esbuild": "^0.23.0",
+    "typescript": "^5.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefw/lkclean.git"
+  },
+  "homepage": "https://github.com/stefw/lkclean#readme",
+  "keywords": [
+    "chrome-extension",
+    "linkedin",
+    "feed-filter",
+    "typesafe-ai",
+    "jev",
+    "manifest-v3",
+    "typescript",
+    "content-classification"
+  ],
+  "author": "stefw",
+  "license": "MIT"
+}

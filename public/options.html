@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>lkclean — réglages</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>lkclean</h1>
+      <p>Décide, post par post, ce qui mérite ta lecture. Chaque post du fil est évalué par Jev ; les verdicts sont mis en cache pour la session.</p>
+    </header>
+
+    <label class="switch">
+      <input type="checkbox" id="enabled">
+      <span>Filtrage activé</span>
+    </label>
+
+    <section>
+      <h2>Accès à Jev</h2>
+      <label for="apiKey">Clé API TypeSafe</label>
+      <input type="password" id="apiKey" autocomplete="off" placeholder="ts-…">
+      <small>Récupérable sur console.typesafe.ai. Stockée dans le stockage synchronisé de Chrome, jamais injectée dans la page LinkedIn.</small>
+      <label for="model">Modèle</label>
+      <input type="text" id="model">
+    </section>
+
+    <section>
+      <h2>Ce qui t'intéresse</h2>
+      <label for="interests">Centres d'intérêt, un par ligne</label>
+      <textarea id="interests" rows="6" placeholder="IA appliquée en entreprise&#10;product management&#10;design d'API&#10;cyclisme"></textarea>
+      <small>Laisse vide pour ne filtrer que le bruit (engagement bait, auto-promo, sponsorisé).</small>
+      <label for="blocked">Sujets à masquer d'office, un par ligne</label>
+      <textarea id="blocked" rows="3" placeholder="offres d'emploi&#10;crypto&#10;politique"></textarea>
+    </section>
+
+    <section>
+      <h2>Sensibilité</h2>
+      <div class="range">
+        <label for="noiseThreshold">Masquer le bruit à partir de <output id="noiseOut"></output></label>
+        <input type="range" id="noiseThreshold" min="0.4" max="0.95" step="0.05">
+        <small>Probabilité qu'un post soit de l'engagement bait ou de l'auto-promo. Plus haut = plus tolérant.</small>
+      </div>
+      <div class="range">
+        <label for="interestThreshold">Masquer le hors-sujet en dessous de <output id="interestOut"></output></label>
+        <input type="range" id="interestThreshold" min="0.05" max="0.7" step="0.05">
+        <small>Probabilité que le post touche un de tes centres d'intérêt. Plus bas = ne masque que ce dont Jev est sûr.</small>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="hideSponsored">
+        <span>Masquer les posts sponsorisés sans appel à Jev</span>
+      </label>
+      <label for="minChars">Ignorer les posts de moins de</label>
+      <div class="inline"><input type="number" id="minChars" min="0" step="10"><span>caractères</span></div>
+    </section>
+
+    <section>
+      <h2>Sur la page LinkedIn</h2>
+      <label class="switch">
+        <input type="checkbox" id="showKeptReason">
+        <span>Expliquer, sur les posts gardés, pourquoi Jev les a laissés passer</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="showSticker">
+        <span>Afficher la pastille d'activité Jev en bas à gauche</span>
+      </label>
+    </section>
+
+    <footer>
+      <button id="save" type="button">Enregistrer</button>
+      <span id="status" role="status"></span>
+    </footer>
+  </main>
+  <script type="module" src="options.js"></script>
+</body>
+</html>

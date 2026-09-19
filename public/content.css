@@ -1,0 +1,40 @@
+[data-lkclean-hidden] > :not(.lkclean-bar) { display: none !important; }
+[data-lkclean-hidden] { padding: 0 !important; min-height: 0 !important; }
+/* Relance du scroll infini : pousse brièvement le marqueur de fin de fil hors de l'écran. */
+[data-lkclean-push] { margin-bottom: 8000px !important; }
+
+.lkclean-bar, .lkclean-note {
+  --lk-ink: #1f2933; --lk-muted: #5c6470; --lk-fill: #00000010; --lk-line: #00000022;
+  --lk-ok: #12876c; --lk-near: #a15c00; --lk-near-fill: #f5a6231f;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px;
+  font: 500 12px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--lk-muted); font-variant-numeric: tabular-nums;
+}
+.lkclean--dark {
+  --lk-ink: #e9edf2; --lk-muted: #a3aeba; --lk-fill: #ffffff14; --lk-line: #ffffff2b;
+  --lk-ok: #4fd1b0; --lk-near: #f2b55c; --lk-near-fill: #f5a62326;
+}
+.lkclean-bar { padding: 8px 14px; margin: 4px 0; background: var(--lk-fill); border-radius: 8px; }
+.lkclean-bar--shown { margin-bottom: 8px; }
+.lkclean-note { padding: 2px 6px 6px; }
+.lkclean-bar b, .lkclean-note b { color: var(--lk-ink); font-weight: 600; }
+.lkclean-bar__reason, .lkclean-note__lead {
+  flex: 1 1 130px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lkclean-note__dot {
+  display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%;
+  background: var(--lk-ok); vertical-align: 1px;
+}
+.lkclean-chip {
+  flex: none; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--lk-line);
+  font-size: 11.5px; white-space: nowrap; cursor: default;
+}
+.lkclean-chip--near { color: var(--lk-near); border-color: transparent; background: var(--lk-near-fill); }
+.lkclean-chip--over { color: var(--lk-ink); border-color: transparent; background: var(--lk-near-fill); font-weight: 650; }
+.lkclean-note__dot--near { background: var(--lk-near); }
+.lkclean-bar button {
+  flex: none; border: 1px solid var(--lk-line); background: transparent; color: var(--lk-ink);
+  border-radius: 999px; padding: 3px 10px; font: inherit; cursor: pointer;
+}
+.lkclean-bar button:hover { background: var(--lk-fill); }
+.lkclean-bar button:focus-visible { outline: 2px solid var(--lk-ok); outline-offset: 1px; }
