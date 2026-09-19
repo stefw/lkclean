@@ -88,6 +88,18 @@ function buildQuestions(s: Settings) {
     };
   }
 
+  // « Lequel ? » : matches_interests ne donne qu'une probabilité globale, pas le sujet concerné.
+  if (s.interests.length > 1) {
+    const criteria: Record<string, string | null> = { none: "The post does not substantially cover any of them" };
+    for (const t of s.interests) criteria[t] = null;
+    q.top_interest = {
+      type: "choice",
+      instructions:
+        "Which one of the user's interests does the post cover most substantially? If it covers none of them, answer 'none'.",
+      criteria,
+    };
+  }
+
   if (s.blocked.length > 0) {
     const criteria: Record<string, string | null> = { none: "None of the blocked topics" };
     for (const t of s.blocked) criteria[t] = null;
@@ -118,25 +130,35 @@ function decide(s: Settings, answers: Record<string, Answer>): Verdict {
   if (promo !== undefined) scores.self_promo = promo;
   if (match !== undefined) scores.matches_interests = match;
 
+  // Un seul intérêt déclaré : pas besoin de demander lequel.
+  const top = answers.top_interest;
+  let interest: string | undefined;
+  if (top?.type === "choice") {
+    if (top.choice !== "none") interest = top.choice;
+    scores.top_interest_confidence = top.confidence;
+  } else if (s.interests.length === 1 && match !== undefined && match >= s.interestThreshold) {
+    interest = s.interests[0];
+  }
+
   const blocked = answers.blocked_topic;
   if (blocked?.type === "choice") {
     scores.blocked_confidence = blocked.confidence;
     if (blocked.choice !== "none" && blocked.confidence >= 0.6) {
-      return { hide: true, reason: "blocked_topic", detail: blocked.choice, scores };
+      return { hide: true, reason: "blocked_topic", detail: blocked.choice, interest, scores };
     }
   }
 
   if (bait !== undefined && bait >= s.noiseThreshold) {
-    return { hide: true, reason: "engagement_bait", detail: pct(bait), scores };
+    return { hide: true, reason: "engagement_bait", detail: pct(bait), interest, scores };
   }
   if (promo !== undefined && promo >= s.noiseThreshold) {
-    return { hide: true, reason: "self_promo", detail: pct(promo), scores };
+    return { hide: true, reason: "self_promo", detail: pct(promo), interest, scores };
   }
   // On ne masque pour hors-sujet que si Jev est vraiment sûr que ça ne colle pas.
   if (match !== undefined && match < s.interestThreshold) {
     return { hide: true, reason: "off_topic", detail: pct(match), scores };
   }
-  return { hide: false, scores };
+  return { hide: false, interest, scores };
 }
 
 const pct = (x: number) => `${Math.round(x * 100)} %`;

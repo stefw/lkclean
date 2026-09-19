@@ -139,7 +139,8 @@ function isDarkPage(): boolean {
 function verdictLabel(v: Verdict): string {
   if (v.hide) return v.reason ? REASON_LABEL[v.reason] : "masqué";
   const match = v.scores?.matches_interests;
-  return match !== undefined ? `intérêt ${pct(match)}` : "peu de bruit";
+  if (match === undefined) return "peu de bruit";
+  return v.interest ? `${v.interest} · ${pct(match)}` : `intérêt ${pct(match)}`;
 }
 
 type ChipState = "plain" | "near" | "over";
@@ -151,7 +152,8 @@ function scoreStates(v: Verdict): { label: string; value: number; state: ChipSta
   const m = sc.matches_interests;
   if (m !== undefined) {
     const state = m < ui.interestThreshold ? "over" : m < ui.interestThreshold + 0.15 ? "near" : "plain";
-    out.push({ label: "intérêt", value: m, state, hint: `Masqué sous ${pct(ui.interestThreshold)}` });
+    const which = v.interest ? `Sujet reconnu : ${v.interest}. ` : "";
+    out.push({ label: "intérêt", value: m, state, hint: `${which}Masqué sous ${pct(ui.interestThreshold)}` });
   }
   for (const [key, label] of [["engagement_bait", "bait"], ["self_promo", "promo"]] as const) {
     const x = sc[key];
@@ -175,14 +177,16 @@ function scoreChips(v: Verdict): HTMLElement[] {
 function noteKept(el: HTMLElement, v: Verdict): void {
   if (!ui.showKeptReason || !v.scores || el.querySelector(":scope > .lkclean-note")) return;
   const tight = scoreStates(v).some((x) => x.state === "near");
-  const why = v.scores.matches_interests !== undefined ? "pertinent pour toi" : "peu de bruit";
+  const why = v.interest ?? (v.scores.matches_interests !== undefined ? "pertinent pour toi" : "peu de bruit");
   const note = node("div", `lkclean-note${isDarkPage() ? " lkclean--dark" : ""}`);
   const lead = node("span", "lkclean-note__lead");
   lead.append(
     node("span", `lkclean-note__dot${tight ? " lkclean-note__dot--near" : ""}`),
     node("b", "", tight ? "Gardé de justesse" : "Gardé par Jev"),
-    ` · ${why}`,
+    " · ",
+    v.interest ? node("span", "lkclean-note__topic", why) : why,
   );
+  if (v.interest) lead.title = `Centre d'intérêt reconnu : ${v.interest}`;
   note.append(lead, ...scoreChips(v));
   el.prepend(note);
 }
@@ -192,7 +196,10 @@ function hidePost(el: HTMLElement, v: Verdict): void {
   el.querySelector(":scope > .lkclean-note")?.remove();
   const bar = node("div", `lkclean-bar${isDarkPage() ? " lkclean--dark" : ""}`);
   const reason = node("span", "lkclean-bar__reason");
+  // verdictLabel() d'un post masqué = la raison ; le sujet reconnu est donné en complément.
   reason.append("Post masqué · ", node("b", "", verdictLabel(v)), v.detail ? ` · ${v.detail}` : "");
+  if (v.interest) reason.append(" · sujet : ", node("span", "lkclean-note__topic", v.interest));
+  reason.title = reason.textContent ?? "";
   const btn = node("button", "", "Afficher");
   btn.type = "button";
   btn.addEventListener("click", () => {

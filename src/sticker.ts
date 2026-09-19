@@ -74,10 +74,11 @@ const CSS = `
 .spark i { flex: 1; max-width: 8px; min-height: 2px; border-radius: 2px 2px 0 0; background: #4b5763; }
 .spark i.h { background: #38c6a4; }
 .spark:empty::after { content: "en attente du premier appel…"; color: #6f7b87; font-size: 11.5px; align-self: center; }
-.recent { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 4px; }
-.recent li { display: flex; gap: 8px; justify-content: space-between; }
-.recent li span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.recent li span:last-child { flex: none; color: #9aa6b2; }
+.recent { list-style: none; margin: 0 0 10px; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; }
+.recent li { display: flex; gap: 8px; justify-content: space-between; min-width: 0; }
+.recent li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recent li span:first-child { flex: 0 1 auto; min-width: 0; }
+.recent li span:last-child { flex: 0 2 auto; min-width: 0; max-width: 62%; text-align: right; color: #9aa6b2; }
 .recent li.h span:last-child { color: #7fd4c1; }
 .err { color: #ff9d8f; margin: 0 0 10px; overflow-wrap: anywhere; }
 .err:empty { display: none; }

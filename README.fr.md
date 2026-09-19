@@ -46,6 +46,7 @@ le post.
    | `engagement_bait` | `noul` | clickbait, question rhétorique finale, storytelling creux |
    | `self_promo` | `noul` | « thrilled to announce », humble-brag, communication d'entreprise |
    | `matches_interests` | `noul` | le post touche-t-il un de tes centres d'intérêt ? |
+   | `top_interest` | `choice` | *lequel* de tes centres d'intérêt il recoupe (affiché sur le post) |
    | `blocked_topic` | `choice` | sujets à masquer d'office |
 
 3. Du code ordinaire transforme les probabilités en verdict selon tes seuils

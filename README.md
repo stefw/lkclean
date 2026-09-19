@@ -44,6 +44,7 @@ a one-line bar, and every decision is explained right on the post.
    | `engagement_bait` | `noul` | clickbait, rhetorical closing question, hollow storytelling |
    | `self_promo` | `noul` | "thrilled to announce", humble-brag, company PR |
    | `matches_interests` | `noul` | does the post cover one of your interests? |
+   | `top_interest` | `choice` | *which* of your interests it covers (shown on the post) |
    | `blocked_topic` | `choice` | topics you always want hidden |
 
 3. Plain code turns the probabilities into a verdict using your thresholds

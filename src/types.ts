@@ -50,6 +50,8 @@ export interface Verdict {
   hide: boolean;
   reason?: Reason;
   detail?: string;
+  /** Centre d'intérêt de l'utilisateur que le post recoupe le plus, s'il y en a un */
+  interest?: string;
   /** scores bruts, utiles pour le debug */
   scores?: Record<string, number>;
 }
