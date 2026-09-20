@@ -28,6 +28,13 @@ a one-line bar, and every decision is explained right on the post.
   verdicts cached per session. Roughly $0.042 per million input tokens: a scrolling
   session costs a fraction of a cent.
 
+
+<img width="502" height="383" alt="notok" src="https://github.com/user-attachments/assets/b9f92b7e-aad6-4287-830f-a625f586dd40" />
+
+
+<img width="513" height="486" alt="ok" src="https://github.com/user-attachments/assets/f248e1eb-eb23-4790-a195-a226ad9f7deb" />
+
+
 ## How it works
 
 1. A content script watches the feed with a `MutationObserver` and picks up each
