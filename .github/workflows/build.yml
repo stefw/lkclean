@@ -20,11 +20,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
@@ -46,7 +46,7 @@ jobs:
           echo "zip=${zip}" >> "$GITHUB_OUTPUT"
           echo "sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: lkclean-v${{ steps.pkg.outputs.version }}-${{ steps.pkg.outputs.sha }}
           path: ${{ steps.pkg.outputs.zip }}
