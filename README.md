@@ -63,13 +63,19 @@ page or to the content script.
 
 ## Install
 
+**From a release (no build needed):** download `lkclean-vX.Y.Z.zip` from the
+[latest release](https://github.com/stefw/lkclean/releases/latest), unzip it, then
+in Chrome: `chrome://extensions` → enable *Developer mode* → *Load unpacked* →
+select the unzipped folder.
+
+**From source:**
+
 ```bash
 npm install
 npm run build
 ```
 
-Then in Chrome: `chrome://extensions` → enable *Developer mode* → *Load unpacked*
-→ select the `dist/` folder.
+Then load the `dist/` folder the same way.
 
 Click the extension icon to open the settings: paste your TypeSafe key
 (from [console.typesafe.ai](https://console.typesafe.ai)), list your interests
@@ -122,6 +128,22 @@ npm run typecheck  # tsc --noEmit
 To change what gets filtered, edit `buildQuestions()` and `decide()` in
 `src/background.ts`. Jev evaluates every question independently and in parallel,
 so an extra question costs almost no latency.
+
+## Releases
+
+Every push and pull request is typechecked and built by GitHub Actions
+(`.github/workflows/build.yml`); the packaged zip is attached to the run. To cut a
+release, bump the version and push to `main`:
+
+```bash
+npm version patch --no-git-tag-version   # or minor / major
+git commit -am "Release v$(node -p "require('./package.json').version")"
+git push
+```
+
+The workflow publishes `vX.Y.Z` with `lkclean-vX.Y.Z.zip` the first time it sees a
+version that has no release yet. `package.json` is the single source of truth: the
+build copies its version into the manifest.
 
 ## When LinkedIn changes its markup
 

@@ -1,0 +1,69 @@
+name: Build & release
+
+# Every push and pull request: typecheck, build, and attach the packaged
+# extension to the run. On main, a GitHub release is published the first time a
+# given package.json version is seen — bump the version to cut a release.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+
+      - name: Package
+        id: pkg
+        run: |
+          version=$(node -p "require('./package.json').version")
+          manifest=$(node -p "require('./dist/manifest.json').version")
+          if [ "$version" != "$manifest" ]; then
+            echo "::error::dist/manifest.json is $manifest but package.json is $version"
+            exit 1
+          fi
+          zip="lkclean-v${version}.zip"
+          (cd dist && zip -qr "../${zip}" .)
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "zip=${zip}" >> "$GITHUB_OUTPUT"
+          echo "sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lkclean-v${{ steps.pkg.outputs.version }}-${{ steps.pkg.outputs.sha }}
+          path: ${{ steps.pkg.outputs.zip }}
+          if-no-files-found: error
+
+      - name: Publish release for a new version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ steps.pkg.outputs.version }}
+          ZIP: ${{ steps.pkg.outputs.zip }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists: nothing to publish."
+            exit 0
+          fi
+          gh release create "$TAG" "$ZIP" \
+            --target "$GITHUB_SHA" \
+            --title "lkclean $TAG" \
+            --generate-notes

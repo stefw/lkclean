@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "zip": "npm run build && cd dist && zip -qr ../lkclean-v$npm_package_version.zip ."
   },
   "devDependencies": {
     "@types/chrome": "^0.0.270",

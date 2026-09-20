@@ -64,13 +64,19 @@ page LinkedIn ni au content script.
 
 ## Installation
 
+**Depuis une release (sans rien compiler) :** télécharge `lkclean-vX.Y.Z.zip` depuis
+la [dernière release](https://github.com/stefw/lkclean/releases/latest), dézippe-le,
+puis dans Chrome : `chrome://extensions` → activer le *Mode développeur* →
+*Charger l'extension non empaquetée* → choisir le dossier dézippé.
+
+**Depuis les sources :**
+
 ```bash
 npm install
 npm run build
 ```
 
-Puis dans Chrome : `chrome://extensions` → activer le *Mode développeur* →
-*Charger l'extension non empaquetée* → choisir le dossier `dist/`.
+Puis charge le dossier `dist/` de la même façon.
 
 Clique sur l'icône de l'extension pour ouvrir les réglages : colle ta clé TypeSafe
 (depuis [console.typesafe.ai](https://console.typesafe.ai)), liste tes centres
@@ -122,6 +128,22 @@ npm run typecheck  # tsc --noEmit
 Pour changer ce qui est filtré, modifie `buildQuestions()` et `decide()` dans
 `src/background.ts`. Jev évalue chaque question indépendamment et en parallèle :
 une question de plus ne coûte presque rien en latence.
+
+## Releases
+
+Chaque push et chaque pull request est vérifié (typecheck) et compilé par GitHub
+Actions (`.github/workflows/build.yml`) ; le zip est attaché au run. Pour publier
+une release, monte la version et pousse sur `main` :
+
+```bash
+npm version patch --no-git-tag-version   # ou minor / major
+git commit -am "Release v$(node -p "require('./package.json').version")"
+git push
+```
+
+Le workflow publie `vX.Y.Z` avec `lkclean-vX.Y.Z.zip` la première fois qu'il voit une
+version sans release. `package.json` est la seule source de vérité : le build
+recopie sa version dans le manifest.
 
 ## Quand LinkedIn change son balisage
 
