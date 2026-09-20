@@ -30,6 +30,12 @@ le post.
   parallèle, verdicts mis en cache pour la session. Environ 0,042 $ par million de
   tokens en entrée : une session de scroll coûte une fraction de centime.
 
+
+<img width="502" height="383" alt="notok" src="https://github.com/user-attachments/assets/6c7a739f-a63e-4953-884e-6dff45736c45" />
+
+<img width="513" height="486" alt="ok" src="https://github.com/user-attachments/assets/fa22115b-176c-4720-8700-47dbbbe51c01" />
+
+
 ## Fonctionnement
 
 1. Un content script observe le fil (`MutationObserver`) et attrape chaque post :
